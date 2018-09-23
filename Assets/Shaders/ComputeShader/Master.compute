@@ -1,0 +1,37 @@
+﻿#pragma kernel Horizontal
+float HorizontalDeltatime;
+RWStructuredBuffer<float4> HorizontalPosition;
+StructuredBuffer<float> HorizontalSpeed;
+
+[numthreads(1, 1, 1)]
+
+void Horizontal(uint3 id : SV_DispatchThreadID)
+{
+	HorizontalPosition[id.x].x = HorizontalPosition[id.x].x >= 20 ? -2 : HorizontalPosition[id.x].x + HorizontalSpeed[id.x]* HorizontalDeltatime;
+}
+
+#pragma kernel Vertical
+float VerticalDeltatime;
+RWStructuredBuffer<float4> VerticalPosition;
+StructuredBuffer<float> VerticalSpeed;
+
+[numthreads(1,1,1)]
+
+void Vertical(uint3 id : SV_DispatchThreadID)
+{
+	VerticalPosition[id.x].y = VerticalPosition[id.x].y >= 20 ? -2 : VerticalPosition[id.x].y + VerticalSpeed[id.x]* VerticalDeltatime;
+}
+
+#pragma kernel Column
+
+float ColumnDeltatime;
+RWStructuredBuffer<float4> ColumnPosition; // x RAD z POS w Radius
+StructuredBuffer<float> ColumnSpeed;
+
+[numthreads(1, 1, 1)]
+
+void Column(uint3 id : SV_DispatchThreadID)
+{
+	ColumnPosition[id.x].z = ColumnPosition[id.x].z <= -10 ? 20 : ColumnPosition[id.x].z - ColumnSpeed[id.x] * ColumnDeltatime;
+	ColumnPosition[id.x].x = ColumnPosition[id.x].x >= 2 * 3.141592654 ? 0 : ColumnPosition[id.x].x + ColumnSpeed[id.x] * 0.1 * ColumnDeltatime;
+}
